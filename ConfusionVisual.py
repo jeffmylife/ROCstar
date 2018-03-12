@@ -38,3 +38,22 @@ ax.set_ylim(0,1+.01)
 ax.fill_betweenx(tpr,fpr,tpr,color="green",alpha=.2)
 
 ax.fill_between(fpr,0,fpr,color="gray",alpha=.2)
+
+
+
+
+%matplotlib inline
+import matplotlib.pyplot as plt
+import numpy as np
+from mpldatacursor import datacursor
+
+
+data = np.outer(range(10), range(1, 5))
+
+fig, ax = plt.subplots()
+lines = ax.plot(data)
+ax.set_title('Click somewhere on a line')
+
+datacursor(lines)
+
+plt.show()
