@@ -36,24 +36,28 @@ ax.plot(fpr,fpr,color="gray",linestyle="--")
 ax.set_xlim(0-.01,1)
 ax.set_ylim(0,1+.01)
 ax.fill_betweenx(tpr,fpr,tpr,color="green",alpha=.2)
-
 ax.fill_between(fpr,0,fpr,color="gray",alpha=.2)
 
 
 
 
-%matplotlib inline
-import matplotlib.pyplot as plt
-import numpy as np
-from mpldatacursor import datacursor
+# coding: utf-8
+
+# In[ ]:
+
+#This is the ConfusionVisual class.
+# Stories related to this class include :
+#1) N1 : Interactive graphs
+#2) F6 : Axis Type (?)
+
+class ConfusionVisual:
+
+    #Class variables
+    x_axis = []
+    y_axis = []
+
+    
 
 
-data = np.outer(range(10), range(1, 5))
 
-fig, ax = plt.subplots()
-lines = ax.plot(data)
-ax.set_title('Click somewhere on a line')
 
-datacursor(lines)
-
-plt.show()
