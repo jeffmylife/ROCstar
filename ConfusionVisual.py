@@ -28,7 +28,9 @@ fpr,tpr,confs = ROC(pred_data,true_data,bins=50)
 ##plot ROC data
 import matplotlib.pyplot as plt
 import numpy as np
-%matplotlib inline
+from mpldatacursor import DataCursor
+from mpldatacursor import HighlightingDataCursor
+%matplotlib notebook
 
 fig,ax = plt.subplots(figsize=(4.5, 4.5))
 ax.plot(fpr,tpr,color="green")
@@ -37,6 +39,9 @@ ax.set_xlim(0-.01,1)
 ax.set_ylim(0,1+.01)
 ax.fill_betweenx(tpr,fpr,tpr,color="green",alpha=.2)
 ax.fill_between(fpr,0,fpr,color="gray",alpha=.2)
+
+DataCursor(ax.plot(fpr,tpr,color="green"), display='single', draggable=True, hide_button=1)
+HighlightingDataCursor(ax.plot(fpr,tpr,color="green"), highlight_color='darkgreen')
 
 
 
@@ -55,9 +60,3 @@ class ConfusionVisual:
     #Class variables
     x_axis = []
     y_axis = []
-
-    
-
-
-
-
