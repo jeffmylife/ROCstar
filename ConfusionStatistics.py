@@ -3,7 +3,7 @@
 
 # In[ ]:
 
-
+import numpy as np
 from math import sqrt
 class stat:
     def isConfusionMatrix(*args, **kwargs):
@@ -71,7 +71,7 @@ class stat:
     def F1(*args,**kwargs):
         """Returns the harmonic mean of precision and score"""
         tp,fp,tn,fn = stat.isConfusionMatrix(*args,**kwargs)
-        return (2 * tp) / (2 * tp + fp + fn) 
+        return (2 * tp) / (2 * tp + fp + fn)
 
     def MCC(*args,**kwargs):
         """Returns the Matthews correlation coefficient"""
@@ -97,3 +97,21 @@ class stat:
         """Returns a user-defined lambda function"""
         tp,fp,tn,fn = stat.isConfusionMatrix(*args,**kwargs)
         return function(tp,fp,tn,fn)
+
+    def RIE(actives, scores, alpha):
+        """Returns Robust Initial Enhancement"""
+        N=len(actives)
+        n=sum(scores)
+        x = np.array(actives)
+        e = np.exp(-alpha*x)
+        summation = sum(e)
+        RIE = ((1/n)*summation)/((1/N)*((1-np.exp(-alpha))/np.exp(alpha/N-1)))
+        return RIE
+
+    def BEDROC(actives, scores, alpha):
+        """Returns Boltzmann-Enhanced Discrimination of ROC"""
+        N=len(actives)
+        n=sum(scores)
+        RIE=RIE(actives, scores, alpha)
+        BEDROC = (RIE*((1/N)*np.sinh(alpha/2))/(np.cosh(alpha/2)-np.cosh(alpha/2-alpha*(n/N))))+1/(1-np.exp(alpha*((N-n)/N)))
+        return BEDROC
