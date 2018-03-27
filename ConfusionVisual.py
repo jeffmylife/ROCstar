@@ -39,6 +39,13 @@ ax.set_xlim(0-.01,1)
 ax.set_ylim(0,1+.01)
 ax.fill_betweenx(tpr,fpr,tpr,color="green",alpha=.2)
 ax.fill_between(fpr,0,fpr,color="gray",alpha=.2)
+rocTitle = 'ROC Plot Title'
+ax.set_title(rocTitle)
+xLabel = 'x axis title'
+ax.set_xlabel(xLabel)
+yLabel = 'y axis title'
+ax.set_ylabel(yLabel)
+ax.legend(ax.plot(fpr,tpr,color="green"), "roc1", bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
 
 DataCursor(ax.plot(fpr,tpr,color="green"), display='single', draggable=True, hide_button=1)
 HighlightingDataCursor(ax.plot(fpr,tpr,color="green"), highlight_color='darkgreen')
