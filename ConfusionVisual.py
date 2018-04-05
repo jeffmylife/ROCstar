@@ -1,31 +1,39 @@
-#provide data
-true_data = [0,0,0,0,0,0,0,1,1,1,1,1,1,1,1] #0 or 1
-pred_data = [0.3,0.6,0.7,0.1,0.4,0.3,0.5,1-.1,1-.2,1-.3,1-.5,1.3,1-.8,1-.6,1-.3] #[0,1]
+import matplotlib.pyplot as plt
 
-#make ROC data
-from numpy import arange
-import numpy as np
-def ROC(pred,actual,bins=100):
-    low = min(pred)
-    high = max(pred)
-    step = (low+high)/bins
-    confs = []
-    fpr=[]
-    tpr=[]
+class ConfusionVisual:
+    class Axes:
+        def __init__(self,x,x_title,y,y_title,title):
+            self.x = x
+            self.y = y
+            self.y_title = y_title
+            self.x_title = x_title
+            self.title = title 
 
-    for thresh in arange(low-step,high+step,step):
-        conf = ConfusionMatrix.fromThresh(pred,actual,thresh) #be sure to get module from github
-        confs.append(conf)
-        tp,fp,tn,fn = conf
-        fpr.append(fp/(fp+tn)) if fp+tn!=0 else fpr.append(0)
-        tpr.append(tp/(tp+fn)) if tp+fn!=0 else tpr.append(0)
+        def invertAxes(self):
+            tmp=self.Y
+            self.Y=self.X
+            self.X=tmp
+                
+    def __init__(self):
+        self.PLOTS = []
+        
+    def add(self,x,x_title,y,y_title,title):
+        self.PLOTS.append(Axes(x,x_title,y,y_title,title))
+    
+    def plot(self):
+        for axes in self.PLOTS:
+            plt.plot(axes.x,axes.y)
+        
+        if __name__=='__main__':
+            plt.show()
+        else:
+            return plt
+        
+        
 
-    fpr=np.array(fpr)[::-1] #reverses data
-    tpr=np.array(tpr)[::-1]
-    return fpr,tpr,confs
-fpr,tpr,confs = ROC(pred_data,true_data,bins=50)
 
-##plot ROC data
+
+'''
 import matplotlib.pyplot as plt
 import numpy as np
 from mpldatacursor import DataCursor
@@ -49,21 +57,9 @@ ax.legend(ax.plot(fpr,tpr,color="green"), "roc1", bbox_to_anchor=(1.05, 1), loc=
 
 DataCursor(ax.plot(fpr,tpr,color="green"), display='single', draggable=True, hide_button=1)
 HighlightingDataCursor(ax.plot(fpr,tpr,color="green"), highlight_color='darkgreen')
+'''
 
 
 
 
-# coding: utf-8
 
-# In[ ]:
-
-#This is the ConfusionVisual class.
-# Stories related to this class include :
-#1) N1 : Interactive graphs
-#2) F6 : Axis Type (?)
-
-class ConfusionVisual:
-
-    #Class variables
-    x_axis = []
-    y_axis = []

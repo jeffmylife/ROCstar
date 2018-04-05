@@ -3,7 +3,7 @@ import ConfusionMatrix
 import numpy  
 from sklearn.preprocessing import label_binarize
 
-'''Helper functions '''
+
 def removePrivateMethods(methodDict):
     for key in list(methodDict): 
         if key.startswith("__"):
@@ -15,6 +15,8 @@ def binarize(lst):
     if len(labels)>2:
         raise ValueError("Non-binary data not allowed")
     return label_binarize(lst,list(labels))[:,0]
+
+
 
 
 class ROCstar:
@@ -61,13 +63,19 @@ class ROCstar:
     def apply(self,function: str) -> dict:
         return {model:self.STATS[function](*self.CONFS[model]) for model in self.CONFS}
     
+    def plot(self,x_axis: str ="FPR",y_axis: str ="TPR"):
+        x_data = self.apply(x_axis)
+        y_data = self.apply(y_axis)
+        vis = ConfusionVisual()
+        for model in self.CONFS:
+            vis.add(x=x_data[model],x_title=x_axis,y=y_data[model],y_title=y_axis,title=model)
+    
+        vis.plot()
+        plt.show()
+        
     
     
-    
-''' example:
-import numpy as np 
-r = ROCstar((1,0,1),{"pred1":[1,0,1]})
-r.addPreds({"pred2":np.array([0,1,1])})
-r.apply("ACC")
 '''
-'''OUTPUT: {'pred1': 1.0, 'pred2': 0.3333333333333333}'''
+r = ROCstar((1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1,1,0,1),{"pred1":(1,0.6,1.0,.6,.7,1,1,0,1,1,0,1,.5,0,.1,1,0.7,1,.1,0,1,1,0,1)})
+r.plot()
+'''
