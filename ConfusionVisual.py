@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+from sklearn import metrics
 
 class ConfusionVisual:
     class Axes:
@@ -13,12 +14,15 @@ class ConfusionVisual:
             tmp=self.Y
             self.Y=self.X
             self.X=tmp
+            
+        def AUC(x,y,**kwargs):
+            return auc(x,y,**kwargs)
                 
     def __init__(self):
         self.PLOTS = []
         
     def add(self,x,x_title,y,y_title,title):
-        self.PLOTS.append(Axes(x,x_title,y,y_title,title))
+        self.PLOTS.append(ConfusionVisual.Axes(x,x_title,y,y_title,title))
     
     def plot(self):
         for axes in self.PLOTS:
@@ -28,6 +32,10 @@ class ConfusionVisual:
             plt.show()
         else:
             return plt
+        
+        
+
+
         
         
 
