@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from sklearn import metrics
+from math import log
 
 class ConfusionVisual:
     class Axes:
@@ -11,63 +12,45 @@ class ConfusionVisual:
             self.title = title 
 
         def invertAxes(self):
-            tmp=self.Y
-            self.Y=self.X
-            self.X=tmp
+            tmp=self.y
+            self.y=self.x
+            self.x=tmp
             
-        def AUC(x,y,**kwargs):
-            return auc(x,y,**kwargs)
+        def axesToLog(self,base=10):
+            self.x = log(self.x,base)
+            self.y = log(self.y,base)
+            
+        def AUC(self,**kwargs):
+            return metrics.auc(self.x,self.y,**kwargs)
                 
     def __init__(self):
         self.PLOTS = []
         
     def add(self,x,x_title,y,y_title,title):
-        self.PLOTS.append(ConfusionVisual.Axes(x,x_title,y,y_title,title))
+        self.PLOTS.append( ConfusionVisual.Axes(x, x_title, y, y_title, title) )
     
-    def plot(self):
+    def plot(self,show=True,show_legend=True,show_random=True, title="ROC",figsize=5,**kwargs):
+        fig, ax = plt.subplots(figsize=(figsize, figsize)) 
+        
         for axes in self.PLOTS:
-            plt.plot(axes.x,axes.y)
+            ax.plot(axes.x,axes.y,label=axes.title)
+            ax.scatter(axes.x,axes.y)
+            
+        plt.title(title)
+        plt.xlabel(axes.x_title)
+        plt.ylabel(axes.y_title)
         
-        if __name__=='__main__':
-            plt.show()
-        else:
-            return plt
+        lim_offset = 0.01 if "lim_offset" not in kwargs else kwargs["lim_offset"]
+        plt.xlim(0-lim_offset,1+lim_offset)
+        plt.ylim(0-lim_offset,1+lim_offset)
         
+        if show_legend: plt.legend(loc="lower right" if  "legend_loc" not in kwargs else kwargs["legend_loc"])    
+        diag_line, = ax.plot(ax.get_xlim(), ax.get_ylim(), ls="--", c=".3")
         
-
-
-        
-        
-
-
-
-'''
-import matplotlib.pyplot as plt
-import numpy as np
-from mpldatacursor import DataCursor
-from mpldatacursor import HighlightingDataCursor
-%matplotlib notebook
-
-fig,ax = plt.subplots(figsize=(4.5, 4.5))
-ax.plot(fpr,tpr,color="green")
-ax.plot(fpr,fpr,color="gray",linestyle="--")
-ax.set_xlim(0-.01,1)
-ax.set_ylim(0,1+.01)
-ax.fill_betweenx(tpr,fpr,tpr,color="green",alpha=.2)
-ax.fill_between(fpr,0,fpr,color="gray",alpha=.2)
-rocTitle = 'ROC Plot Title'
-ax.set_title(rocTitle)
-xLabel = 'x axis title'
-ax.set_xlabel(xLabel)
-yLabel = 'y axis title'
-ax.set_ylabel(yLabel)
-ax.legend(ax.plot(fpr,tpr,color="green"), "roc1", bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0.)
-
-DataCursor(ax.plot(fpr,tpr,color="green"), display='single', draggable=True, hide_button=1)
-HighlightingDataCursor(ax.plot(fpr,tpr,color="green"), highlight_color='darkgreen')
-'''
-
-
-
-
-
+        return plt
+    
+    def AUC(self):
+        out = dict()
+        for axes in self.PLOTS:
+            out[axes.title] = axes.AUC()
+        return out
