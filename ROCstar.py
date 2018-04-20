@@ -26,7 +26,7 @@ class ROCstar:
             raise ValueError("Non-binary data not allowed")
         return label_binarize(lst,list(labels))[:,0]  
     
-    STATS = __removePrivateMethods__(dict(ConfusionStatistics.stat.__dict__))
+    STATS = __removePrivateMethods__(dict(ConfusionStatistics.__dict__))
     MATRIX = __removePrivateMethods__(dict(ConfusionMatrix.ConfusionMatrix.__dict__))
     VISUAL = __removePrivateMethods__(dict(ConfusionVisual.ConfusionVisual.__dict__))
     
