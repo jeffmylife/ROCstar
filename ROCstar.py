@@ -10,6 +10,39 @@ import matplotlib.pyplot as plt
 class ROCstar:
     import matplotlib.pyplot as plt
     
+    def fluff(x1, y1,rand_interpol=True):
+    	og = sorted(list(set([(x,y) for x,y in zip(x1,y1)])))
+    	tol = 0.001
+    	rounder = abs(int(log10(tol)))
+    	d = dict()
+    	for i,j in og:
+        	if i in d:
+            	d[i].append(j)
+        	else:
+            	d[i]=[j]
+    	dout=dict()
+                
+    	left = ( 0.0, max(d[0.0]) )
+    	d.pop(left[0])
+    	l=[(0.0,0.0),left]
+    	for x in d:
+        	right = ( x, min(d[x]) )  
+        	'''Equation of the line:  x | (y2-y1) / (x2-x1) * (x-x0) + y1'''
+        	m = (right[1]-left[1]) / (right[0]-left[0]) if rand_interpol else 1
+        	line = lambda x: round( m * (x-left[0]) + left[1], rounder )
+        	for t in arange(left[0],right[0]+tol,tol): 
+            	y_t = line(t)
+            	if  round(t,rounder)>1 :
+                	break
+            	if y_t>1:
+                	dout[round(t,rounder)] = 1
+            	else:
+                	dout[round(t,rounder)] = y_t
+        	left = ( x, max(d[x]) )
+
+    	x,y = list(dout),list(dout.values())
+    	return [0]+x, [0]+y
+    
     @staticmethod
     def removePrivateMethods(methodDict):
         for key in list(methodDict): 
